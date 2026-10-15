@@ -261,6 +261,7 @@ export function StatBlockFactoryBuilderTab({
                         )}
                         title={t('dashboard.statFactory.changeIcon')}
                         aria-label={t('dashboard.statFactory.changeIcon')}
+                        aria-label={t('dashboard.statFactory.changeIcon')}
                       >
                         <IconComponent className={cn('w-4 h-4', COLOR_CLASSES[block.color])} />
                       </button>
@@ -290,6 +291,7 @@ export function StatBlockFactoryBuilderTab({
                                     block.icon === iconName && 'bg-purple-500/20',
                                   )}
                                   title={iconName}
+                                  aria-label={iconName}
                                   aria-label={iconName}
                                 >
                                   <PickerIcon className="w-3.5 h-3.5 text-foreground" />
