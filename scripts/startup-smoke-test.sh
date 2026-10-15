@@ -213,10 +213,31 @@ ENVEOF
   docker)
     echo -e "${BOLD}Building Docker image...${NC}"
 
-    docker build -t kc-smoke-test:latest \
-      --build-arg APP_VERSION=smoke-test \
-      --build-arg COMMIT_HASH=$(git rev-parse --short HEAD) \
-      . 2>&1 | tail -5
+    # public.ecr.aws can return 429 on shared runner IPs; retry, then fall back to docker.io mirrors
+    docker_build() {
+      docker build -t kc-smoke-test:latest \
+        --build-arg APP_VERSION=smoke-test \
+        --build-arg COMMIT_HASH="$(git rev-parse --short HEAD)" \
+        "$@" . 2>&1 | tail -5
+    }
+    DOCKER_BUILD_ATTEMPTS=3
+    DOCKER_BUILD_RETRY_DELAY_SECONDS=20
+    DOCKER_BUILD_OK=false
+    for attempt in $(seq 1 "$DOCKER_BUILD_ATTEMPTS"); do
+      if docker_build; then DOCKER_BUILD_OK=true; break; fi
+      echo -e "${YELLOW}  ⚠ Docker build attempt ${attempt}/${DOCKER_BUILD_ATTEMPTS} failed${NC}"
+      [ "$attempt" -lt "$DOCKER_BUILD_ATTEMPTS" ] && sleep $((attempt * DOCKER_BUILD_RETRY_DELAY_SECONDS))
+    done
+    if [ "$DOCKER_BUILD_OK" != "true" ]; then
+      echo -e "${YELLOW}  Falling back to docker.io base images${NC}"
+      DOCKER_GOLANG_BASE="$(grep -m1 '^ARG GOLANG_BASE=' Dockerfile | cut -d= -f2- | sed 's#^public.ecr.aws/docker/library/#docker.io/library/#')"
+      DOCKER_ALPINE_BASE="$(grep -m1 '^ARG ALPINE_BASE=' Dockerfile | cut -d= -f2- | sed 's#^public.ecr.aws/docker/library/#docker.io/library/#')"
+      DOCKER_NODE_BASE="$(grep -m1 '^ARG NODE_BASE=' Dockerfile | cut -d= -f2- | sed 's#^public.ecr.aws/docker/library/#docker.io/library/#')"
+      docker_build \
+        --build-arg GOLANG_BASE="$DOCKER_GOLANG_BASE" \
+        --build-arg ALPINE_BASE="$DOCKER_ALPINE_BASE" \
+        --build-arg NODE_BASE="$DOCKER_NODE_BASE"
+    fi
 
     echo -e "${BOLD}Starting container...${NC}"
 
