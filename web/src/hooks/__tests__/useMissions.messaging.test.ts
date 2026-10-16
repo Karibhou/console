@@ -12,6 +12,9 @@ vi.mock('../useLocalAgent', () => ({
 }))
 
 vi.mock('../mcp/agentFetch', () => ({
+  // sharedImpl wires token access and auth recovery during module initialization.
+  getStoredAgentToken: vi.fn(() => ''),
+  setResetAuthFailedImpl: vi.fn(),
   agentFetch: vi.fn(),
 }))
 

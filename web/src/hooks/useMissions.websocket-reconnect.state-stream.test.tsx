@@ -7,6 +7,9 @@ import { getDemoMode } from './useDemoMode'
 // ── External module mocks ─────────────────────────────────────────────────────
 
 vi.mock('./mcp/agentFetch', () => ({
+  // sharedImpl wires token access and auth recovery during module initialization.
+  getStoredAgentToken: vi.fn(() => ''),
+  setResetAuthFailedImpl: vi.fn(),
   agentFetch: vi.fn((...args: unknown[]) => globalThis.fetch(...(args as [RequestInfo, RequestInit?]))),
 }))
 
