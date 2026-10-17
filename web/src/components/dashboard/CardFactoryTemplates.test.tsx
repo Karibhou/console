@@ -9,7 +9,7 @@ vi.mock('../../lib/dynamic-cards', () => ({
   saveDynamicCard: (...args: unknown[]) => saveDynamicCard(...args),
 }))
 
-vi.mock('../cards/cardRegistry', () => ({
+vi.mock('../cards/cardRegistry.dynamic', () => ({
   registerDynamicCardType: (...args: unknown[]) => registerDynamicCardType(...args),
 }))
 

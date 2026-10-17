@@ -12,6 +12,15 @@ import { miscCardRegistry } from './cardRegistry.misc'
 import { multiTenancyCardRegistry } from './cardRegistry.multiTenancy'
 import { observabilityCardRegistry } from './cardRegistry.observability'
 import type { CardComponent } from './cardRegistry.types'
+import {
+  CARD_COMPONENTS, CARD_CHUNK_PRELOADERS, CARD_DEFAULT_WIDTHS,
+  DEMO_DATA_CARDS, LIVE_DATA_CARDS,
+} from './cardRegistry.dynamic'
+
+export {
+  CARD_COMPONENTS, CARD_DEFAULT_WIDTHS, DEMO_DATA_CARDS, LIVE_DATA_CARDS,
+  prefetchCardChunks, registerDynamicCardType,
+} from './cardRegistry.dynamic'
 
 export type { CardComponent, CardComponentProps } from './cardRegistry.types'
 export { DEMO_EXEMPT_CARDS }
@@ -62,11 +71,11 @@ function mergeRegistryDomains() {
 
 const mergedRegistry = mergeRegistryDomains()
 
-export const CARD_COMPONENTS = mergedRegistry.components
-const CARD_CHUNK_PRELOADERS = mergedRegistry.chunkPreloaders
-export const CARD_DEFAULT_WIDTHS = mergedRegistry.defaultWidths
-export const DEMO_DATA_CARDS = mergedRegistry.demoDataCards
-export const LIVE_DATA_CARDS = mergedRegistry.liveDataCards
+Object.assign(CARD_COMPONENTS, mergedRegistry.components)
+Object.assign(CARD_CHUNK_PRELOADERS, mergedRegistry.chunkPreloaders)
+Object.assign(CARD_DEFAULT_WIDTHS, mergedRegistry.defaultWidths)
+mergedRegistry.demoDataCards.forEach(cardType => DEMO_DATA_CARDS.add(cardType))
+mergedRegistry.liveDataCards.forEach(cardType => LIVE_DATA_CARDS.add(cardType))
 
 Object.assign(CARD_COMPONENTS, quantumCardRegistry.components)
 Object.assign(CARD_CHUNK_PRELOADERS, quantumCardRegistry.preloaders)
@@ -82,12 +91,6 @@ registerAllDescriptorCards({
   liveDataCards: LIVE_DATA_CARDS,
   demoExemptCards: DEMO_EXEMPT_CARDS,
 })
-
-export function prefetchCardChunks(cardTypes: string[]): void {
-  for (const type of cardTypes) {
-    CARD_CHUNK_PRELOADERS[type]?.()?.catch((e) => logger.warn('[CardRegistry] Failed to prefetch card chunk:', type, e))
-  }
-}
 
 export function prefetchDemoCardChunks(): void {
   const startupChunks = [
@@ -154,10 +157,6 @@ registerCardComponentResolver(getCardComponent)
 
 export function isCardTypeRegistered(cardType: string): boolean {
   return cardType in CARD_COMPONENTS || isDynamicCardRegistered(cardType)
-}
-
-export function registerDynamicCardType(cardType: string, width = 6): void {
-  CARD_DEFAULT_WIDTHS[cardType] = width
 }
 
 export function getRegisteredCardTypes(): string[] {
