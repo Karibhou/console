@@ -17,11 +17,14 @@ import { renderHook, act } from '@testing-library/react'
 // Mocks -- declared before module import
 // ---------------------------------------------------------------------------
 
-vi.mock('../mcp/shared', () => ({
+// Loading the MCP barrel here recreates the cycle through sharedImpl.fetching
+// and useLocalAgent. The manager must work with only the agentFetch leaf.
+vi.mock('../mcp/shared', () => {
+  throw new Error('AgentManager must not load the MCP shared barrel')
+})
+
+vi.mock('../mcp/agentFetch', () => ({
   agentFetch: (...args: unknown[]) => globalThis.fetch(...(args as [RequestInfo, RequestInit?])),
-  clusterCacheRef: { clusters: [] },
-  REFRESH_INTERVAL_MS: 120_000,
-  CLUSTER_POLL_INTERVAL_MS: 60_000,
 }))
 
 vi.mock('../../hooks/useDemoMode', async (importOriginal) => ({

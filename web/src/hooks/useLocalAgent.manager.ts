@@ -5,7 +5,7 @@ import { emitAgentConnected, emitAgentDisconnected, emitAgentProvidersDetected, 
 import { safeGetItem, safeSetItem } from '../lib/utils/localStorage'
 import { STORAGE_KEY_FIRST_AGENT_CONNECT } from '../lib/constants/storage'
 import { triggerAllRefetches } from '../lib/modeTransition'
-import { agentFetch } from './mcp/shared'
+import { agentFetch } from './mcp/agentFetch'
 import { HTTP_UNAUTHORIZED } from '../lib/constants/http'
 import type { AgentState, ConnectionEvent, Listener } from './useLocalAgent.types'
 import {
