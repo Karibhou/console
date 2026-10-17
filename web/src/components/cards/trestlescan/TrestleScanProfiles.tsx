@@ -1,9 +1,9 @@
 import { Shield, ChevronRight, CheckCircle, XCircle, Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { StatusBadge } from '../ui/StatusBadge'
-import type { OscalProfile } from '../../hooks/useTrestle'
-import type { useDrillDownActions } from '../../hooks/useDrillDown'
-import { SCORE_GOOD_THRESHOLD, SCORE_WARNING_THRESHOLD } from './TrestleScan.constants'
+import { StatusBadge } from '../../ui/StatusBadge'
+import type { OscalProfile } from '../../../hooks/useTrestle'
+import type { useDrillDownActions } from '../../../hooks/useDrillDown'
+import { SCORE_GOOD_THRESHOLD, SCORE_WARNING_THRESHOLD } from '../TrestleScan.constants'
 
 export function TrestleScanProfiles({ allProfiles, expandedProfile, setExpandedProfile, drillToCompliance }: {
   allProfiles: OscalProfile[]

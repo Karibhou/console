@@ -1,7 +1,7 @@
 import { memo, useEffect } from 'react'
 import { Eye } from 'lucide-react'
-import type { ChangeType, ResourceListItem, ResourceType } from './NamespaceMonitor.types'
-import { ChangeAnimations, MAX_VISIBLE_ITEMS, ResourceColors, ResourceIcons } from './NamespaceMonitor.utils'
+import type { ChangeType, ResourceListItem, ResourceType } from '../NamespaceMonitor.types'
+import { ChangeAnimations, MAX_VISIBLE_ITEMS, ResourceColors, ResourceIcons } from '../NamespaceMonitor.utils'
 
 interface ResourceSectionProps {
   type: ResourceType

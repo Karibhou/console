@@ -1,6 +1,6 @@
 import { memo, useMemo, useState, useEffect, useRef } from 'react'
 import { CheckCircle, AlertTriangle, Clock, Server } from 'lucide-react'
-import { PodHealthTrendChart, type HealthPoint } from './PodHealthTrendChart'
+import { PodHealthTrendChart, type HealthPoint } from './podhealthtrend/PodHealthTrendChart'
 import { useClusters } from '../../hooks/useMCP'
 import { useCachedPodIssues } from '../../hooks/useCachedData'
 import { useGlobalFilters } from '../../hooks/useGlobalFilters'

@@ -8,7 +8,7 @@ import type {
   ResourceType,
 } from './NamespaceMonitor.types'
 import { MAX_NAMESPACES_RENDERED_PER_CLUSTER } from './NamespaceMonitor.utils'
-import { ResourceSection } from './NamespaceMonitorResourceSection'
+import { ResourceSection } from './namespacemonitor/NamespaceMonitorResourceSection'
 import { cn } from '@/lib/cn'
 
 // Pure UI component — renders namespace/resource table based on props; no data fetching.

@@ -1,8 +1,8 @@
 import { useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { cn } from '../../lib/cn'
-import type { TabType } from './UserManagement.types'
-import { USER_MANAGEMENT_TABS } from './UserManagement.utils'
+import { cn } from '../../../lib/cn'
+import type { TabType } from '../UserManagement.types'
+import { USER_MANAGEMENT_TABS } from '../UserManagement.utils'
 
 export function UserManagementTabs({ activeTab, setActiveTab }: {
   activeTab: TabType

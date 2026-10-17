@@ -19,7 +19,7 @@ import { useMissions } from '../../hooks/useMissions'
 import { useGlobalFilters } from '../../hooks/useGlobalFilters'
 import { useDrillDownActions } from '../../hooks/useDrillDown'
 import { RefreshIndicator } from '../ui/RefreshIndicator'
-import { TrestleScanProfiles } from './TrestleScanProfiles'
+import { TrestleScanProfiles } from './trestlescan/TrestleScanProfiles'
 import { SCORE_GOOD_THRESHOLD, SCORE_WARNING_THRESHOLD } from './TrestleScan.constants'
 
 interface CardConfig {
