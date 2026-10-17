@@ -209,7 +209,7 @@ export function useEventsTimeline() {
   const totalSeriesData = useMemo(() => (chartTimePoints || []).map(point => point.total), [chartTimePoints])
 
   // Calculate totals from all filtered events (not just those in time buckets)
-  const totalWarnings = useMemo(() => 
+  const totalWarnings = useMemo(() =>
     (filteredEvents || []).reduce((sum, e) => sum + (e.type === 'Warning' ? getEventCount(e.count) : 0), 0),
     [filteredEvents]
   )

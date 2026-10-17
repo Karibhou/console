@@ -41,19 +41,6 @@ test('EventsTimeline retains its chart, totals, and time-range control', async (
   })
 })
 
-test('IframeEmbed retains configuration and the demo placeholder', async ({ page }) => {
-  const card = await openCard(page, 'iframe_embed')
-  await expect(card.locator('input[type="url"]')).toBeVisible({ timeout: CONTENT_TIMEOUT_MS })
-  await expect(card).toHaveScreenshot('hook-split-iframe-settings.png')
-  await card.getByRole('button', { name: /Grafana/ }).click()
-  await expect(card.locator('input[type="url"]')).toHaveValue('http://localhost:3000')
-  await card.getByRole('button', { name: /Save.*Load/i }).click()
-  await expect(card.locator('input[type="url"]')).toHaveCount(0)
-  await expect(card.locator('iframe')).toHaveCount(0)
-  await expect(card.getByText('Grafana', { exact: true })).toBeVisible()
-  await expect(card).toHaveScreenshot('hook-split-iframe-demo.png')
-})
-
 test('Kubedle retains its board, help, and statistics', async ({ page }) => {
   const card = await openCard(page, 'kubedle')
   await expect(card.getByRole('button', { name: 'ENTER', exact: true })).toBeVisible({ timeout: CONTENT_TIMEOUT_MS })

@@ -1,13 +1,18 @@
+import { useCardExpanded } from './CardWrapper'
 import {
   ExternalLink, Settings, X, AlertTriangle,
   RotateCcw, Globe, Save, Trash2
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useCardDemoState } from './CardDataContext'
 import { Skeleton } from '../ui/Skeleton'
 import type { CSSProperties } from 'react'
-import { useIframeEmbed, DEFAULT_HEIGHT, type IframeEmbedConfig } from './useIframeEmbed'
+import { DEFAULT_HEIGHT, useIframeEmbed } from './useIframeEmbed'
+import type { IframeEmbedConfig } from './useIframeEmbed'
 
 // Inline style constants
 const IFRAME_EMBED_IFRAME_STYLE_1: CSSProperties = { border: 'none', display: 'block' }
+
 
 const DEFAULT_SANDBOX = ['allow-scripts', 'allow-same-origin', 'allow-forms', 'allow-popups']
 
@@ -21,33 +26,17 @@ const PRESET_EMBEDS = [
 ]
 
 export function IframeEmbed({ config }: { config?: IframeEmbedConfig }) {
+  const { t } = useTranslation(['common', 'cards'])
+  const { isExpanded } = useCardExpanded()
+  const { shouldUseDemoData } = useCardDemoState({ requires: 'backend' })
   const {
-    t,
-    iframeRef,
-    url,
-    title,
-    refreshInterval,
-    setRefreshInterval,
-    height,
-    setHeight,
-    showSettings,
-    setShowSettings,
-    isLoading,
-    loadError,
-    urlInput,
-    setUrlInput,
-    titleInput,
-    setTitleInput,
-    handleRefresh,
-    handleLoad,
-    handleError,
-    handleSaveConfig,
-    handleClear,
-    handlePresetSelect,
-    openInNewTab,
-    displayHeight,
-    shouldUseDemoData,
-  } = useIframeEmbed(config)
+    iframeRef, url, title, refreshInterval, setRefreshInterval, height, setHeight,
+    showSettings, setShowSettings, isLoading, loadError, urlInput, setUrlInput,
+    titleInput, setTitleInput, handleRefresh, handleLoad, handleError,
+    handleSaveConfig, handleClear, handlePresetSelect, openInNewTab,
+  } = useIframeEmbed(config, shouldUseDemoData)
+
+  const displayHeight = isExpanded ? 600 : height
 
   return (
     <div className="h-full flex flex-col">

@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useCardExpanded } from './CardWrapper'
 import { useTranslation } from 'react-i18next'
-import { useCardDemoState } from './CardDataContext'
 
 export interface IframeEmbedConfig {
   url?: string
@@ -20,6 +18,12 @@ interface SavedEmbed {
 
 const STORAGE_KEY = 'iframe_embed_saved'
 export const DEFAULT_HEIGHT = 400
+/** Length of the existing URL-derived card instance identifier. */
+const INSTANCE_ID_LENGTH = 12
+/** Briefly clear the iframe source before reloading it. */
+const RELOAD_DELAY_MS = 50
+/** Convert the configured refresh interval from seconds to milliseconds. */
+const MS_PER_SECOND = 1000
 
 /**
  * Allowed URL schemes for iframe embedding.
@@ -30,7 +34,7 @@ const ALLOWED_URL_SCHEMES = ['http:', 'https:']
 
 /**
  * Validate a URL before using it as an iframe src.
- * Returns the original URL if it has an allowed scheme, or an empty string
+ * Returns the normalized URL if it has an allowed scheme, or an empty string
  * if the scheme is disallowed (e.g. javascript:, data:, blob:).
  * This prevents XSS-through-DOM attacks via scheme injection.
  */
@@ -46,16 +50,14 @@ function sanitizeIframeUrl(url: string): string {
   }
 }
 
-
-export function useIframeEmbed(config?: IframeEmbedConfig) {
+/** Owns an embed's editable configuration, persistence, and reload lifecycle. */
+export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseDemoData: boolean) {
   const { t } = useTranslation(['common', 'cards'])
-  const { isExpanded } = useCardExpanded()
-  const { shouldUseDemoData } = useCardDemoState({ requires: 'backend' })
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
   // Each card instance has its own ID based on config or generates one
   const [instanceId] = useState(() => {
-    if (config?.url) return btoa(config.url).slice(0, 12)
+    if (config?.url) return btoa(config.url).slice(0, INSTANCE_ID_LENGTH)
     return `embed_${Date.now()}`
   })
 
@@ -83,7 +85,7 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
   // Load saved config for this instance
   useEffect(() => {
     if (!config?.url) {
-      const saved = savedEmbeds.find(e => e.id === instanceId)
+      const saved = (savedEmbeds || []).find(e => e.id === instanceId)
       if (saved) {
         // Sanitize URL loaded from localStorage to guard against scheme injection
         // (e.g. javascript: or data: URLs stored by a compromised page)
@@ -110,7 +112,7 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
       if (iframeRef.current) {
         iframeRef.current.src = sanitizeIframeUrl(url)
       }
-    }, 50)
+    }, RELOAD_DELAY_MS)
     setLastRefresh(new Date())
   }, [url])
 
@@ -120,7 +122,7 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
 
     const interval = setInterval(() => {
       handleRefresh()
-    }, refreshInterval * 1000)
+    }, refreshInterval * MS_PER_SECOND)
 
     return () => clearInterval(interval)
   }, [shouldUseDemoData, refreshInterval, url, handleRefresh])
@@ -157,7 +159,7 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
       refreshInterval }
 
     setSavedEmbeds(prev => {
-      const filtered = prev.filter(e => e.id !== instanceId)
+      const filtered = (prev || []).filter(e => e.id !== instanceId)
       const updated = [...filtered, newSaved]
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
       return updated
@@ -173,7 +175,7 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
     setLoadError(null)
 
     setSavedEmbeds(prev => {
-      const filtered = prev.filter(e => e.id !== instanceId)
+      const filtered = (prev || []).filter(e => e.id !== instanceId)
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
       return filtered
     })
@@ -190,33 +192,10 @@ export function useIframeEmbed(config?: IframeEmbedConfig) {
     }
   }
 
-  const displayHeight = isExpanded ? 600 : height
-
   return {
-    t,
-    iframeRef,
-    url,
-    title,
-    refreshInterval,
-    setRefreshInterval,
-    height,
-    setHeight,
-    showSettings,
-    setShowSettings,
-    isLoading,
-    loadError,
-    urlInput,
-    setUrlInput,
-    titleInput,
-    setTitleInput,
-    handleRefresh,
-    handleLoad,
-    handleError,
-    handleSaveConfig,
-    handleClear,
-    handlePresetSelect,
-    openInNewTab,
-    displayHeight,
-    shouldUseDemoData,
+    iframeRef, url, title, refreshInterval, setRefreshInterval, height, setHeight,
+    showSettings, setShowSettings, isLoading, loadError, urlInput, setUrlInput,
+    titleInput, setTitleInput, handleRefresh, handleLoad, handleError,
+    handleSaveConfig, handleClear, handlePresetSelect, openInNewTab,
   }
 }
