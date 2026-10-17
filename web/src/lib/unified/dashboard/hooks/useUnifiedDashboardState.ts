@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import type {
   UnifiedDashboardConfig,
   DashboardCardPlacement } from '../../types'
-import { prefetchCardChunks } from '../../../../components/cards/cardRegistry'
+import { prefetchCardChunks } from '../../../../components/cards/cardRegistry.dynamic'
 import { SHORT_DELAY_MS } from '../../../constants/network'
 import { useModalState } from '../../../modals'
 import { useToast } from '../../../../components/ui/Toast'

@@ -13,7 +13,7 @@ vi.mock('../../lib/dynamic-cards', () => ({
   createCardComponent: (...args: unknown[]) => createCardComponent(...args),
 }))
 
-vi.mock('../cards/cardRegistry', () => ({
+vi.mock('../cards/cardRegistry.dynamic', () => ({
   registerDynamicCardType: (...args: unknown[]) => registerDynamicCardType(...args),
 }))
 

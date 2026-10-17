@@ -2,6 +2,7 @@
  * Tests for components/cards/cardRegistry.ts — pure-function and registry exports
  */
 import { describe, it, expect, beforeEach } from 'vitest'
+import * as dynamicRegistry from '../cardRegistry.dynamic'
 import {
   CARD_COMPONENTS,
   CARD_DEFAULT_WIDTHS,
@@ -173,5 +174,24 @@ describe('getRegisteredCardTypes()', () => {
 
   it('matches Object.keys(CARD_COMPONENTS)', () => {
     expect(getRegisteredCardTypes()).toEqual(Object.keys(CARD_COMPONENTS))
+  })
+})
+
+// The assembler must populate the same objects already held by leaf consumers.
+describe('leaf registry compatibility', () => {
+  it('shares populated collections with the public barrel', () => {
+    expect(dynamicRegistry.CARD_COMPONENTS).toBe(CARD_COMPONENTS)
+    expect(dynamicRegistry.CARD_DEFAULT_WIDTHS).toBe(CARD_DEFAULT_WIDTHS)
+    expect(dynamicRegistry.DEMO_DATA_CARDS).toBe(DEMO_DATA_CARDS)
+    expect(dynamicRegistry.LIVE_DATA_CARDS).toBe(LIVE_DATA_CARDS)
+    expect(dynamicRegistry.registerDynamicCardType).toBe(registerDynamicCardType)
+    expect(dynamicRegistry.CARD_CHUNK_PRELOADERS.cert_manager).toBeTypeOf('function')
+  })
+
+  it('makes widths registered through the leaf visible through the barrel', () => {
+    const cardType = '__leaf_compatibility_test__'
+    dynamicRegistry.registerDynamicCardType(cardType)
+    expect(getDefaultCardWidth(cardType)).toBe(6)
+    delete CARD_DEFAULT_WIDTHS[cardType]
   })
 })

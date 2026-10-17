@@ -6,7 +6,7 @@ import { compileCardCode } from '../../lib/dynamic-cards/compiler'
 import type {
   DynamicCardDefinition,
   DynamicCardDefinition_T1 } from '../../lib/dynamic-cards/types'
-import { registerDynamicCardType } from '../cards/cardRegistry'
+import { registerDynamicCardType } from '../cards/cardRegistry.dynamic'
 import { AiGenerationPanel } from './AiGenerationPanel'
 import { CARD_T1_SYSTEM_PROMPT, CARD_T2_SYSTEM_PROMPT } from '../../lib/ai/prompts'
 import { T1Preview, T2Preview } from './cardFactoryPreviews'
