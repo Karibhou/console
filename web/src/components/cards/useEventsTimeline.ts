@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react'
 import { useClusters } from '../../hooks/useMCP'
 import { useCachedEvents } from '../../hooks/useCachedData'
 import { useGlobalFilters } from '../../hooks/useGlobalFilters'
-import { useCardLoadingState } from './CardDataContext'
 import { useDemoMode } from '../../hooks/useDemoMode'
 import { MS_PER_MINUTE } from '../../lib/constants/time'
 import { useLocalClusterFilter } from '../../lib/cards/cardHooks'
@@ -131,15 +130,16 @@ export function useEventsTimeline() {
   const { deduplicatedClusters: rawClusters } = useClusters()
   const clusters = useMemo(() => Array.isArray(rawClusters) ? rawClusters : [], [rawClusters])
 
-  // Report state to CardWrapper for refresh animation
+  // Inputs for useCardLoadingState — the card component calls it so
+  // CardWrapper state wiring stays in the top-level card file.
   const hasData = (events || []).length > 0
-  const { showSkeleton, showEmptyState } = useCardLoadingState({
+  const cardLoadingInput = {
     isLoading: hookLoading && !hasData,
     isDemoData: isDemoMode || isDemoFallback,
     hasAnyData: hasData,
     isFailed,
     consecutiveFailures,
-    isRefreshing })
+    isRefreshing }
   const {
     selectedClusters: rawSelectedClusters,
     isAllClustersSelected = true,
@@ -312,8 +312,7 @@ export function useEventsTimeline() {
     TIME_RANGE_OPTIONS,
     isRefreshing,
     lastRefresh,
-    showSkeleton,
-    showEmptyState,
+    cardLoadingInput,
     timeRange,
     setTimeRange,
     localClusterFilter,

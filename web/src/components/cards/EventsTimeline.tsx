@@ -6,6 +6,7 @@ import { RefreshIndicator } from '../ui/RefreshIndicator'
 import { CardClusterFilter } from '../../lib/cards/CardComponents'
 import { DynamicCardErrorBoundary } from './DynamicCardErrorBoundary'
 import { CHART_HEIGHT_STANDARD } from '../../lib/constants'
+import { useCardLoadingState } from './CardDataContext'
 import { useEventsTimeline, type TimeRange } from './useEventsTimeline'
 
 const CLUSTER_FILTER_MIN_CLUSTERS = 1
@@ -18,8 +19,7 @@ function EventsTimelineInternal() {
     TIME_RANGE_OPTIONS,
     isRefreshing,
     lastRefresh,
-    showSkeleton,
-    showEmptyState,
+    cardLoadingInput,
     timeRange,
     setTimeRange,
     localClusterFilter,
@@ -36,6 +36,9 @@ function EventsTimelineInternal() {
     peakEvents,
     chartOption,
   } = useEventsTimeline()
+
+  // Report state to CardWrapper for refresh animation
+  const { showSkeleton, showEmptyState } = useCardLoadingState(cardLoadingInput)
 
   if (showSkeleton) {
     return (
