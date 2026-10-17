@@ -91,15 +91,10 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
         // (e.g. javascript: or data: URLs stored by a compromised page)
         const safeUrl = sanitizeIframeUrl(saved.url)
         setUrl(safeUrl)
-        // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
         setTitle(saved.title)
-        // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
         setRefreshInterval(saved.refreshInterval)
-        // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
         setUrlInput(safeUrl)
-        // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
         setTitleInput(saved.title)
-        // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
         setShowSettings(!safeUrl)
       }
     }
@@ -108,7 +103,6 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
   const handleRefresh = useCallback(() => {
     if (!iframeRef.current || !url) return
     setIsLoading(true)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLoadError(null)
     // Force iframe reload using the sanitized `url` state — never read back
     // from iframeRef.current.src (DOM property), which is an XSS-through-DOM
@@ -135,13 +129,11 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
 
   const handleLoad = () => {
     setIsLoading(false)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLoadError(null)
   }
 
   const handleError = () => {
     setIsLoading(false)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLoadError(t('cards:iframeEmbed.failedToLoadContent'))
   }
 
@@ -153,15 +145,10 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
     const newTitle = titleInput.trim() || 'Embed'
 
     setUrl(newUrl)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setTitle(newTitle)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setShowSettings(false)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setIsLoading(true)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLoadError(null)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLastRefresh(new Date())
 
     // Save to localStorage
@@ -181,15 +168,10 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
 
   const handleClear = () => {
     setUrl('')
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setTitle('Embed')
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setUrlInput('')
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setTitleInput('')
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setShowSettings(true)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setLoadError(null)
 
     setSavedEmbeds(prev => {
@@ -201,7 +183,6 @@ export function useIframeEmbed(config: IframeEmbedConfig | undefined, shouldUseD
 
   const handlePresetSelect = (preset: { url: string; title: string }) => {
     setUrlInput(preset.url)
-    // eslint-disable-next-line no-restricted-syntax -- Preserve the batched state updates moved from IframeEmbed.
     setTitleInput(preset.title)
   }
 
