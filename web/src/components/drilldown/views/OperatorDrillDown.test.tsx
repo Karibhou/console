@@ -94,4 +94,20 @@ describe('OperatorDrillDown Component', () => {
     await user.click(backBtn)
     expect(mockPop).toHaveBeenCalledTimes(1)
   })
+
+  it('switches between the CSV, CRD, and AI detail tabs', async () => {
+    const user = userEvent.setup()
+    render(<OperatorDrillDown data={OPERATOR_DATA} />)
+
+    await user.click(screen.getByRole('button', { name: 'drilldown.tabs.csvDetails' }))
+    expect(screen.getByText('drilldown.operator.csvNotAvailable')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'drilldown.tabs.crds' }))
+    expect(screen.getByText('drilldown.operator.noCRDs')).toBeInTheDocument()
+    expect(screen.queryByText('drilldown.operator.csvNotAvailable')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'drilldown.tabs.aiAnalysis' }))
+    expect(screen.getByText('drilldown.ai.notConnected')).toBeInTheDocument()
+    expect(screen.queryByText('drilldown.operator.noCRDs')).not.toBeInTheDocument()
+  })
 })
